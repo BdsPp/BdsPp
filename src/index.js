@@ -14,7 +14,7 @@ if (process.argv.length < 2)
     throw new Error('A runtime argument is required.');
 var runArgs = process.argv.slice(2)
     .join(' ')
-    .match(/-p(\s+)?(?<port>\d{1,5})((-h(\s+)?(?<host>\S+))?)?/i);
+    .match(/-p(\s+)?(?<port>\d{1,5})(\s+)((-h(\s+)?(?<host>\S+))?)?/i);
 if (!runArgs)
     runArgs = { groups: {} };
 runArgs = runArgs.groups;
