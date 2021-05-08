@@ -1,0 +1,29 @@
+{
+  "dependencies": {
+    "@types/node": "^15.0.2",
+    "all": "0.0.0",
+    "node-gyp": "^8.0.0",
+    "typescript": "^4.2.4"
+  },
+  "devDependencies": {
+    "npm": "^7.6.3"
+  },
+  "scripts": {
+    "build": "tsc --locale ja",
+    "start": "node src/index.js"
+  },
+  "name": "src",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BdsPp/BdsPp.git"
+  },
+  "author": "k239i <sueqk@outlook.jp>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/BdsPp/BdsPp/issues"
+  },
+  "homepage": "https://github.com/BdsPp/BdsPp#readme",
+  "description": ""
+}
