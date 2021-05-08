@@ -1,7 +1,7 @@
-var dgram = require("dgram");
-var EventEmitter = require("events").EventEmitter;
-var Log = require("./logger");
-var Packet = require("./packets/packet");
+const dgram = require("dgram");
+const { EventEmitter } = require("events");
+const Log = require("./logger");
+const Packet = require("./packets/packet");
 class Server extends EventEmitter {
     constructor(Host, Port, Logger = require("./logger")) {
         super();
@@ -12,12 +12,31 @@ class Server extends EventEmitter {
         };
         this.Server.on('listening', () => {
             this.emit('listening', this.Host, this.Port);
+            this.reqs = {};
         });
         this.Server.on('message', function(buffer, remote) {
+            this.handleMany(remote.address);
             var bytes = buffer.toJSON().data;
             var packet = new Packet(bytes[0], bytes.slice(1));
             OnPacket(this, packet, remote);
             this.emit("onPacket", packet, remote);
+        });
+        this.handleMany = ((ip) => {
+            if(this.reqs[ip]){
+                if(this.reqs[ip].rateLimited) return new Packet(0x15, 'Too Many Packets.(' + this.reqs[ip].value + ')');
+                this.reqs[ip].value += 1;
+                if(this.reqs[ip].value <= 100) {
+                    this.reqs[ip].rateLimited = true;
+                    setTimeout(() => {
+                        this.reqs[ip].rateLimited = false;
+                    },1000);
+                };
+            }else{
+                this.reqs[ip] = { value: 1, rateLimited: false };
+                setTimeout(() => {
+                    this.reqs[ip] = { value: 0, rateLimited: false };
+                },1000);
+            };
         });
     }
     Start() {

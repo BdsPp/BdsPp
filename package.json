@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "tsc --locale ja",
-    "start": "node src/index.js"
+    "start": "node src/server.js"
   },
   "name": "src",
   "version": "1.0.0",
