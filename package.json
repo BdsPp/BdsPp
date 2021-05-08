@@ -8,11 +8,11 @@
   },
   "scripts": {
     "build": "tsc --locale ja",
-    "start": "node src/server.js"
+    "start": "node index.js"
   },
   "name": "src",
   "version": "1.0.0",
-  "main": "src/index.js",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/BdsPp/BdsPp.git"
