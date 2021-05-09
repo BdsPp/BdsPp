@@ -13,7 +13,7 @@
             Log(`BdsPp [" + version + "] \u001b[31m${Message}\u001b[0m`);
         },
         Debug: function(Message) {
-            Log(`\u001b[30m${Message}\u001b[0m`);
+            Log(`\u001b[32m${Message}\u001b[0m`);
         }
     }
 })();

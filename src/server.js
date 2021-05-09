@@ -7,14 +7,6 @@ const Util = require("./util");
 const Packet = require("./packets/packet");
 const { join } = require('path');
 const { existsSync, readdirSync, lstatSync } = require('fs');
-/*class PacketHandler extends EventEmitter {
-    constructor() {
-        super();
-    };
-    handle(packet) {
-
-    };
-};*/
 class Server extends EventEmitter {
     constructor(Host, Port, Logger = require("./logger"), PluginPath = join(__dirname, '..', 'plugins')) {
         super();
@@ -72,11 +64,27 @@ class Server extends EventEmitter {
             if (!files.includes('index.js')) return;
             if (files.includes('disable')) return;
             const file = require(this.PluginPath + '/' + plugin + '/index.js');
-            file.Handler(this.Handler);
+            var print = (function(chunk) { return process.stdout.write(chunk ? chunk : '\n'); });
+            var PluginLog = function(Message) {
+                print(`${plugin} [ ${file.Version} ] ${Message}\n`);
+            }
+            var PluginLogger = {
+                Info: function(Message) {
+                    PluginLog(Message);
+                },
+                Error: function(Message) {
+                    PluginLog(`\u001b[31m${Message}\u001b[0m`);
+                },
+                Debug: function(Message) {
+                    PluginLog(`\u001b[32m${Message}\u001b[0m`);
+                }
+            }
+            file.Handler(this.Handler, PluginLogger);
             this.Logger.Info('Loaded ' + plugin + ' [' + (file.Version || '1.0.0') + ']\n');
             ++i;
         });
         this.Logger.Info('Loaded ' + i + ' Plugins.\n');
+        this.Handler.emit('ready');
     }
 }
 
