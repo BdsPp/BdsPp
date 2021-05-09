@@ -1,4 +1,4 @@
-module.exports = function (packet, Util){
+module.exports = function (packet, Util) {
     var ServerIDStr = 'MCPE;testMOTD;431;1.16.221;0;10;12712847230353616219;Bedrock level;Survival;1;19132;19133;';
     var IDstrBuf = Util.StrtoBuf(ServerIDStr);
     const out = new Buffer.from([

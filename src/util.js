@@ -36,6 +36,9 @@
             else{
                 return (new TextEncoder).encode(String(str));
             }
+        },
+        MakeGUID : function () {
+            return Math.floor(Math.random() * 0xffffffff);
         }
     }
 })();

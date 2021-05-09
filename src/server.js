@@ -9,6 +9,7 @@ const { join } = require('path');
 const { existsSync, readdirSync, lstatSync } = require('fs');
 
 var _Handler;
+var _GUID;
 
 class Server extends EventEmitter {
     constructor(Host, Port, Logger = require("./logger"), PluginPath = join(__dirname, '..', 'plugins')) {
@@ -21,8 +22,9 @@ class Server extends EventEmitter {
         this.PluginPath = PluginPath;
         this.Logger = Logger;
         this.reqs = {};
+        this.GUID = Util.MakeGUID();
+        _GUID = this.GUID;
         this.Server = dgram.createSocket('udp4');
-
         this.Options = {
             Host,
             Port
@@ -33,7 +35,7 @@ class Server extends EventEmitter {
         this.Server.on('message', function(buffer, remote) {
             //this.HandleMany(remote.address);
             var bytes = buffer.toJSON().data;
-            var packet = new Packet(bytes, this, remote);
+            var packet = new Packet(bytes, this, remote, _GUID);
             OnPacket(packet, _Handler);
             _Handler.emit('__OnRawPacket', buffer, remote);
             this.emit("onPacket", packet, remote);
