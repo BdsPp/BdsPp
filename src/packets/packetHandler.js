@@ -8,7 +8,10 @@ class PacketHandler extends EventEmitter {
         return this;
     }
     handle(packet) {
-        if (packet.Data[0] == 0x01) events.Unconnect(packet);
+        if (packet.Data[0] == 0x01) {
+            events.Unconnect(packet);
+            this.fire('UnConnect', packet.Remote);
+        };
     }
     fire(...args){
         let eventName = args.shift();
