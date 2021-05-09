@@ -1,9 +1,11 @@
 (function () {
     const core = require('../build/Release/Core')
     module.exports = {
-        PacketHandler: function (buffer) {
-            const ans1 = core.packet(Buffer.from([10, 2, 3, 10, 20, 3, 210, 2]));
-            console.log(ans1)
+        PacketHandler: function (Packet) {
+            const ans1 = core.packet(Packet.ID, Packet.Data);
+            if (ans1 != false) {
+                console.log(ans1)
+            }
         }
     }
 })();

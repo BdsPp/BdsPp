@@ -2,6 +2,7 @@ const dgram = require("dgram");
 const { EventEmitter } = require("events");
 const Log = require("./logger");
 const Util = require("./util");
+const Core = require("./core");
 const Packet = require("./packets/packet");
 const { join } = require('path');
 const { existsSync, readdirSync, lstatSync } = require('fs');
@@ -38,7 +39,7 @@ class Server extends EventEmitter {
             this.emit('listening', this.Host, this.Port);
         });
         this.Server.on('message', function (buffer, remote) {
-            this.HandleMany(remote.address);
+            //this.HandleMany(remote.address);
             var bytes = buffer.toJSON().data;
             var packet = new Packet(bytes[0], bytes.slice(1));
             OnPacket(this, packet, remote);
@@ -79,6 +80,9 @@ function OnPacket(server, packet, remote) {
             0x78, ...Util.NumtoBuf(IDstrBuf.length, 2), ...IDstrBuf
         ]);
         server.send(out, remote.port, remote.address, (err) => { });
+    }
+    else {
+        Core.PacketHandler(packet);
     }
 }
 
