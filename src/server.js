@@ -20,7 +20,7 @@ class Server extends EventEmitter {
             this.emit('listening', this.Host, this.Port);
         });
         this.Server.on('message', function(buffer, remote) {
-            handleMany(remote.address);
+            this.HandleMany(remote.address);
             var bytes = buffer.toJSON().data;
             var packet = new Packet(bytes[0], bytes.slice(1));
             OnPacket(this, packet, remote);
@@ -33,7 +33,7 @@ class Server extends EventEmitter {
     Stop() {
         this.Server.close();
     }
-    handleMany(ip){
+    HandleMany(ip){
         if(!this.reqs) this.reqs = {};
         if(this.reqs[ip]){
             if(this.reqs[ip].rateLimited) return new Packet(0x15, 'Too Many Packets.(' + this.reqs[ip].value + ')');
