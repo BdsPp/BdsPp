@@ -35,6 +35,7 @@ class Server extends EventEmitter {
             var bytes = buffer.toJSON().data;
             var packet = new Packet(bytes, this, remote);
             OnPacket(packet, _Handler);
+            _Handler.emit('__OnRawPacket', buffer, remote);
             this.emit("onPacket", packet, remote);
         });
     }
