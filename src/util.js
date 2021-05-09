@@ -39,9 +39,9 @@
         },
         MakeGUID : function () {
             return Math.floor(Math.random() * 0xffffffff);
-        }
+        },
         MakeGUIDBuffer : function() {
-            const buf = Buffer.alloc(0):
+            const buf = Buffer.alloc(0);
             buf.writeUInt8(this.MakeGUID());
         }
     }
