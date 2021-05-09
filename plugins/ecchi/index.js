@@ -9,7 +9,7 @@ module.exports = {
             logger.Debug('ready!');
         });
         setInterval(() => {
-            api.emit('MyCustom15minuteEvent'); // Custom Events
+            api.emit('ecchi.15minuteEvent'); // Custom Events
         }, (15 * 60) * 1000);
     },
     Version: '1.0.1'
