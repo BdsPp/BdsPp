@@ -8,14 +8,12 @@ const Packet = require("./packets/packet");
 const { join } = require('path');
 const { existsSync, readdirSync, lstatSync } = require('fs');
 
-var _Handler;
-var _GUID;
-
 class Server extends EventEmitter {
     constructor(Host, Port, Logger = require("./logger"), PluginPath = join(__dirname, '..', 'plugins')) {
         super();
-
-        //this.Handler = 10;
+        
+        var _Handler;
+        var _GUID;
         this.Handler = new PacketHandler();
         _Handler = this.Handler;
 
@@ -50,7 +48,10 @@ class Server extends EventEmitter {
     LoadPlugins() {
         if (!existsSync(this.PluginPath)) return this.Logger.Error('Plugin Not Found\n');
         const plugins = readdirSync(this.PluginPath);
+        var _Handler = this.Handler;
+        var _GUID;
         let i = 0;
+        
         plugins.forEach(plugin => {
             if (!lstatSync(this.PluginPath + '/' + plugin).isDirectory()) return;
             const files = readdirSync(this.PluginPath + '/' + plugin);
@@ -72,12 +73,12 @@ class Server extends EventEmitter {
                     PluginLog(`\u001b[32m${Message}\u001b[0m`);
                 }
             }
-            file.Handler(this.Handler, PluginLogger);
+            file.Handler(_Handler, PluginLogger);
             this.Logger.Info('Loaded ' + plugin + ' [' + (file.Version || '1.0.0') + ']\n');
             ++i;
         });
         this.Logger.Info('Loaded ' + i + ' Plugins.\n');
-        this.Handler.emit('ready');
+        _Handler.fire('ready');
     }
 }
 
