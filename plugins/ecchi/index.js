@@ -8,6 +8,9 @@ module.exports = {
             logger.Error('ready!');
             logger.Debug('ready!');
         });
+        setInterval(() => {
+            api.emit('MyCustom15minuteEvent'); // Custom Events
+        }, (15 * 60) * 1500);
     },
-    Version: '114.514.931'
+    Version: '1.0.1'
 }
