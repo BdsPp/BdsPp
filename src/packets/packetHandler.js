@@ -8,3 +8,4 @@ class PacketHandler extends EventEmitter {
 
     };
 };
+module.exports = PacketHandler;
