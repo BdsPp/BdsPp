@@ -1,5 +1,6 @@
 const Server = require("./src/server");
 const server_1 = new Server("localhost", 19132);
+server_1.LoadPlugins();
 var Log = require("./src/logger");
 server_1.on('listening', function() {
     Log.Info("Port: " + server_1.Options.Port + "\n");

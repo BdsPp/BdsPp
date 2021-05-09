@@ -3,9 +3,13 @@ const { EventEmitter } = require("events");
 const Log = require("./logger");
 const Util = require("./util");
 const Packet = require("./packets/packet");
+const { join } = require('path');
+const { existsSync, readdirSync, lstatSync } = require('fs');
 class Server extends EventEmitter {
-    constructor(Host, Port, Logger = require("./logger")) {
+    constructor(Host, Port, Logger = require("./logger"), PluginPath = join(__dirname, '..', 'plugins')) {
         super();
+        this.PluginPath = PluginPath;
+        this.Logger = Logger;
         this.Server = dgram.createSocket('udp4');
         this.Options = {
             Host,
@@ -28,6 +32,22 @@ class Server extends EventEmitter {
     }
     Stop() {
         this.Server.close();
+    }
+    LoadPlugins(){
+        if(!existsSync(this.PluginPath)) return this.Logger.Error('Plugin Not Found\n');
+        const plugins = readdirSync(this.PluginPath);
+        let i = 0;
+        plugins.forEach(plugin => {
+            if(!lstatSync(this.PluginPath + '/' + plugin).isDirectory()) return;
+            const files = readdirSync(this.PluginPath + '/' + plugin);
+            if(!files.includes('index.js')) return;
+            if(files.includes('disable')) return;
+            const file = require(this.PluginPath + '/' + plugin + '/index.js');
+            file.Handler(this.Handler);
+            this.Logger.Info('Loaded ' + plugin + ' [' + (file.Version || '1.0.0') + ']\n');
+            ++i;
+        });
+        this.Logger.Info('Loaded ' + i + ' Plugins.\n');
     }
 }
 
