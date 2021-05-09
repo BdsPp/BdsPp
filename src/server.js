@@ -43,7 +43,7 @@ class Server extends EventEmitter {
         this.Server.on('message', function(buffer, remote) {
             //this.HandleMany(remote.address);
             var bytes = buffer.toJSON().data;
-            var packet = new Packet(bytes[0], bytes.slice(1));
+            var packet = new Packet(bytes);
             OnPacket(this, packet, remote);
             this.emit("onPacket", packet, remote);
         });
@@ -89,7 +89,7 @@ class Server extends EventEmitter {
 }
 
 function OnPacket(server, packet, remote) {
-    if (packet.ID == 0x01) {
+    if (packet.Data[0] == 0x01) {
         var ServerIDStr = 'MCPE;testMOTD;431;1.16.221;0;10;12712847230353616219;Bedrock level;Survival;1;19132;19133;';
         var IDstrBuf = Util.StrtoBuf(ServerIDStr);
         const out = new Buffer.from([
