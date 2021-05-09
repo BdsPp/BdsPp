@@ -10,6 +10,7 @@ class Server extends EventEmitter {
         super();
         this.PluginPath = PluginPath;
         this.Logger = Logger;
+        this.reqs = {};
         this.Server = dgram.createSocket('udp4');
         this.Options = {
             Host,
@@ -17,7 +18,6 @@ class Server extends EventEmitter {
         };
         this.Server.on('listening', () => {
             this.emit('listening', this.Host, this.Port);
-            this.reqs = {};
         });
         this.Server.on('message', function(buffer, remote) {
             handleMany(this, remote.address);
