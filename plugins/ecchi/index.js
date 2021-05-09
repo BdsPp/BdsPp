@@ -8,6 +8,9 @@ module.exports = {
             logger.Error('ready!');
             logger.Debug('ready!');
         });
+        api.on('UnConnect', remote => {
+            logger.Debug('ip: ' + remote.address + ' port: ' + remote.port);
+        });
         setInterval(() => {
             api.fire('ecchi.15minuteEvent');
         }, (15 * 60) * 1000);

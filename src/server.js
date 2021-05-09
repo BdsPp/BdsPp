@@ -60,7 +60,7 @@ class Server extends EventEmitter {
             const file = require(this.PluginPath + '/' + plugin + '/index.js');
             var print = (function(chunk) { return process.stdout.write(chunk ? chunk : '\n'); });
             var PluginLog = function(Message) {
-                print(`${plugin} [ ${file.Version} ] ${Message}\n`);
+                print(`\u001b[33m${plugin} [ ${file.Version} ]\u001b[0m ${Message}\n`);
             }
             var PluginLogger = {
                 Info: function(Message) {
