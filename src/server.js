@@ -1,24 +1,25 @@
 const dgram = require("dgram");
 const { EventEmitter } = require("events");
 const Log = require("./logger");
+const PacketHandler = require("./packets/packetHandler");
 const Util = require("./util");
 //const Core = require("./core");
 const Packet = require("./packets/packet");
 const { join } = require('path');
 const { existsSync, readdirSync, lstatSync } = require('fs');
-class PacketHandler extends EventEmitter {
-    constructor(){
+/*class PacketHandler extends EventEmitter {
+    constructor() {
         super();
     };
-    handle(packet){
-        
+    handle(packet) {
+
     };
-};
+};*/
 class Server extends EventEmitter {
     constructor(Host, Port, Logger = require("./logger"), PluginPath = join(__dirname, '..', 'plugins')) {
         super();
         this.Handler = new PacketHandler();
-        this.HandleMany = function (ip) {
+        this.HandleMany = function(ip) {
             if (!this.reqs) this.reqs = {};
             if (this.reqs[ip]) {
                 if (this.reqs[ip].rateLimited) return new Packet(0x15, 'Too Many Packets.(' + this.reqs[ip].value + ')');
@@ -47,7 +48,7 @@ class Server extends EventEmitter {
         this.Server.on('listening', () => {
             this.emit('listening', this.Host, this.Port);
         });
-        this.Server.on('message', function (buffer, remote) {
+        this.Server.on('message', function(buffer, remote) {
             //this.HandleMany(remote.address);
             var bytes = buffer.toJSON().data;
             var packet = new Packet(bytes[0], bytes.slice(1));
@@ -88,9 +89,8 @@ function OnPacket(server, packet, remote) {
             0x5b, 0x00, 0xff, 0xff, 0x00, 0xfe, 0xfe, 0xfe, 0xfe, 0xfd, 0xfd, 0xfd, 0xfd, 0x12, 0x34, 0x56,
             0x78, ...Util.NumtoBuf(IDstrBuf.length, 2), ...IDstrBuf
         ]);
-        server.send(out, remote.port, remote.address, (err) => { });
-    }
-    else {
+        server.send(out, remote.port, remote.address, (err) => {});
+    } else {
         server.PacketHandler.handle(packet);
     }
 }
