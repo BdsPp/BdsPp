@@ -2,13 +2,22 @@ const dgram = require("dgram");
 const { EventEmitter } = require("events");
 const Log = require("./logger");
 const Util = require("./util");
-const Core = require("./core");
+//const Core = require("./core");
 const Packet = require("./packets/packet");
 const { join } = require('path');
 const { existsSync, readdirSync, lstatSync } = require('fs');
+class PacketHandler extends EventEmitter {
+    constructor(){
+        super();
+    };
+    handle(packet){
+        
+    };
+};
 class Server extends EventEmitter {
     constructor(Host, Port, Logger = require("./logger"), PluginPath = join(__dirname, '..', 'plugins')) {
         super();
+        this.Handler = new PacketHandler();
         this.HandleMany = function (ip) {
             if (!this.reqs) this.reqs = {};
             if (this.reqs[ip]) {
@@ -82,7 +91,7 @@ function OnPacket(server, packet, remote) {
         server.send(out, remote.port, remote.address, (err) => { });
     }
     else {
-        Core.PacketHandler(packet);
+        server.PacketHandler.handle(packet);
     }
 }
 
