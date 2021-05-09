@@ -9,8 +9,9 @@ module.exports = {
             logger.Debug('ready!');
         });
         setInterval(() => {
-            api.emit('ecchi.15minuteEvent'); // Custom Events
+            api.fire('ecchi.15minuteEvent');
         }, (15 * 60) * 1000);
+        //api.fire('ready'); /** This is a bad example of how it affects other plugins */
     },
     Version: '1.0.1'
 }

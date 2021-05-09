@@ -6,9 +6,13 @@ class PacketHandler extends EventEmitter {
         super();
 
         return this;
-    };
+    }
     handle(packet) {
         if (packet.Data[0] == 0x01) events.Unconnect(packet);
-    };
+    }
+    fire(...args){
+        let eventName = args.shift();
+        this.emit(eventName, ...args);
+    }
 };
 module.exports = PacketHandler;
