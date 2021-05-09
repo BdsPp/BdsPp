@@ -20,7 +20,7 @@ class Server extends EventEmitter {
             this.emit('listening', this.Host, this.Port);
         });
         this.Server.on('message', function(buffer, remote) {
-            handleMany(this, remote.address);
+            handleMany(remote.address);
             var bytes = buffer.toJSON().data;
             var packet = new Packet(bytes[0], bytes.slice(1));
             OnPacket(this, packet, remote);
@@ -33,6 +33,24 @@ class Server extends EventEmitter {
     Stop() {
         this.Server.close();
     }
+    handleMany(ip){
+        if(!this.reqs) this.reqs = {};
+        if(this.reqs[ip]){
+            if(this.reqs[ip].rateLimited) return new Packet(0x15, 'Too Many Packets.(' + this.reqs[ip].value + ')');
+            this.reqs[ip].value += 1;
+            if(this.reqs[ip].value <= 100) {
+                this.reqs[ip].rateLimited = true;
+                setTimeout(() => {
+                    this.reqs[ip].rateLimited = false;
+                },1000);
+            };
+        }else{
+            this.reqs[ip] = { value: 1, rateLimited: false };
+            setTimeout(() => {
+                this.reqs[ip] = { value: 0, rateLimited: false };
+            },1000);
+        };
+    };
     LoadPlugins(){
         if(!existsSync(this.PluginPath)) return this.Logger.Error('Plugin Not Found\n');
         const plugins = readdirSync(this.PluginPath);
@@ -64,22 +82,5 @@ function OnPacket(server, packet, remote) {
     }
 }
 
-function handleMany(server, ip){
-    if(server.reqs[ip]){
-        if(server.reqs[ip].rateLimited) return new Packet(0x15, 'Too Many Packets.(' + this.reqs[ip].value + ')');
-        server.reqs[ip].value += 1;
-        if(server.reqs[ip].value <= 100) {
-            server.reqs[ip].rateLimited = true;
-            setTimeout(() => {
-                server.reqs[ip].rateLimited = false;
-            },1000);
-        };
-    }else{
-        server.reqs[ip] = { value: 1, rateLimited: false };
-        setTimeout(() => {
-            server.reqs[ip] = { value: 0, rateLimited: false };
-        },1000);
-    };
-};
 module.exports = Server;
 // unnntiiiiiwwww
