@@ -7,32 +7,22 @@ const Util = require("./util");
 const Packet = require("./packets/packet");
 const { join } = require('path');
 const { existsSync, readdirSync, lstatSync } = require('fs');
+
+var _Handler;
+
 class Server extends EventEmitter {
     constructor(Host, Port, Logger = require("./logger"), PluginPath = join(__dirname, '..', 'plugins')) {
         super();
+
+        //this.Handler = 10;
         this.Handler = new PacketHandler();
-        this.HandleMany = function(ip) {
-            if (!this.reqs) this.reqs = {};
-            if (this.reqs[ip]) {
-                if (this.reqs[ip].rateLimited) return new Packet(0x15, 'Too Many Packets.(' + this.reqs[ip].value + ')');
-                this.reqs[ip].value += 1;
-                if (this.reqs[ip].value <= 100) {
-                    this.reqs[ip].rateLimited = true;
-                    setTimeout(() => {
-                        this.reqs[ip].rateLimited = false;
-                    }, 1000);
-                };
-            } else {
-                this.reqs[ip] = { value: 1, rateLimited: false };
-                setTimeout(() => {
-                    this.reqs[ip] = { value: 0, rateLimited: false };
-                }, 1000);
-            };
-        };
+        _Handler = this.Handler;
+
         this.PluginPath = PluginPath;
         this.Logger = Logger;
         this.reqs = {};
         this.Server = dgram.createSocket('udp4');
+
         this.Options = {
             Host,
             Port
@@ -43,8 +33,8 @@ class Server extends EventEmitter {
         this.Server.on('message', function(buffer, remote) {
             //this.HandleMany(remote.address);
             var bytes = buffer.toJSON().data;
-            var packet = new Packet(bytes);
-            OnPacket(this, packet, remote);
+            var packet = new Packet(bytes, this, remote);
+            OnPacket(this, packet, remote, _Handler);
             this.emit("onPacket", packet, remote);
         });
     }
@@ -88,8 +78,9 @@ class Server extends EventEmitter {
     }
 }
 
-function OnPacket(server, packet, remote) {
-    if (packet.Data[0] == 0x01) {
+function OnPacket(server, packet, remote, handler) {
+    handler.handle(packet);
+    /*if (packet.Data[0] == 0x01) {
         var ServerIDStr = 'MCPE;testMOTD;431;1.16.221;0;10;12712847230353616219;Bedrock level;Survival;1;19132;19133;';
         var IDstrBuf = Util.StrtoBuf(ServerIDStr);
         const out = new Buffer.from([
@@ -99,8 +90,9 @@ function OnPacket(server, packet, remote) {
         ]);
         server.send(out, remote.port, remote.address, (err) => {});
     } else {
-        server.PacketHandler.handle(packet);
-    }
+        handler.handle(packet);
+        //console.log(handler);
+    }*/
 }
 
 module.exports = Server;
