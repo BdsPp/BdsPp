@@ -8,6 +8,24 @@ const { existsSync, readdirSync, lstatSync } = require('fs');
 class Server extends EventEmitter {
     constructor(Host, Port, Logger = require("./logger"), PluginPath = join(__dirname, '..', 'plugins')) {
         super();
+        this.HandleMany = function(ip){
+            if(!this.reqs) this.reqs = {};
+            if(this.reqs[ip]){
+                if(this.reqs[ip].rateLimited) return new Packet(0x15, 'Too Many Packets.(' + this.reqs[ip].value + ')');
+                this.reqs[ip].value += 1;
+                if(this.reqs[ip].value <= 100) {
+                    this.reqs[ip].rateLimited = true;
+                    setTimeout(() => {
+                        this.reqs[ip].rateLimited = false;
+                    },1000);
+                };
+            }else{
+                this.reqs[ip] = { value: 1, rateLimited: false };
+                setTimeout(() => {
+                    this.reqs[ip] = { value: 0, rateLimited: false };
+                },1000);
+            };
+        };
         this.PluginPath = PluginPath;
         this.Logger = Logger;
         this.reqs = {};
@@ -33,24 +51,6 @@ class Server extends EventEmitter {
     Stop() {
         this.Server.close();
     }
-    HandleMany(ip){
-        if(!this.reqs) this.reqs = {};
-        if(this.reqs[ip]){
-            if(this.reqs[ip].rateLimited) return new Packet(0x15, 'Too Many Packets.(' + this.reqs[ip].value + ')');
-            this.reqs[ip].value += 1;
-            if(this.reqs[ip].value <= 100) {
-                this.reqs[ip].rateLimited = true;
-                setTimeout(() => {
-                    this.reqs[ip].rateLimited = false;
-                },1000);
-            };
-        }else{
-            this.reqs[ip] = { value: 1, rateLimited: false };
-            setTimeout(() => {
-                this.reqs[ip] = { value: 0, rateLimited: false };
-            },1000);
-        };
-    };
     LoadPlugins(){
         if(!existsSync(this.PluginPath)) return this.Logger.Error('Plugin Not Found\n');
         const plugins = readdirSync(this.PluginPath);
