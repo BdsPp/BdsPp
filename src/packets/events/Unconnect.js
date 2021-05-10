@@ -1,5 +1,5 @@
 module.exports = function (packet, Util) {
-    var ServerIDStr = `MCPE;testMOTD;431;1.16.221;0;10;${packet.GUID};Bedrock level;Survival;1;19132;19133;`;
+    var ServerIDStr = `MCPE;H;431;114.514.931;0;10;${packet.GUID};Bedrock level;Survival;1;19132;19133;`;
     var IDstrBuf = Util.StrtoBuf(ServerIDStr);
     const GUIDbuf = Buffer.allocUnsafe(8);
     GUIDbuf.writeBigUInt64LE(BigInt(packet.GUID), 0);
