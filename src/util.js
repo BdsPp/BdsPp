@@ -43,6 +43,7 @@
         MakeGUIDBuffer : function() {
             const buf = Buffer.alloc(0);
             buf.writeUInt8(this.MakeGUID());
+            return buf;
         }
     }
 })();
