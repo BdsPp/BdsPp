@@ -11,7 +11,7 @@ const { existsSync, readdirSync, lstatSync } = require('fs');
 class Server extends EventEmitter {
     constructor(Host, Port, Logger = require("./logger"), PluginPath = join(__dirname, '..', 'plugins')) {
         super();
-        
+
         var _Handler;
         var _GUID;
         this.Handler = new PacketHandler();
@@ -51,7 +51,7 @@ class Server extends EventEmitter {
         var _Handler = this.Handler;
         var _GUID;
         let i = 0;
-        
+
         plugins.forEach(plugin => {
             if (!lstatSync(this.PluginPath + '/' + plugin).isDirectory()) return;
             const files = readdirSync(this.PluginPath + '/' + plugin);
@@ -82,7 +82,7 @@ class Server extends EventEmitter {
     }
 }
 
-function OnPacket(packet,handler) {
+function OnPacket(packet, handler) {
     handler.handle(packet);
 }
 
