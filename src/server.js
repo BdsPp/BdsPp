@@ -3,7 +3,6 @@ const { EventEmitter } = require("events");
 const Log = require("./logger");
 const PacketHandler = require("./packets/packetHandler");
 const Util = require("./util");
-//const Core = require("./core");
 const Packet = require("./packets/packet");
 const { join } = require('path');
 const { existsSync, readdirSync, lstatSync } = require('fs');

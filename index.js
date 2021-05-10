@@ -11,9 +11,4 @@ server_1.on('listening', function() {
         process.exit(128);
     });
 });
-
-///src/packets/packetHandler.js
-///src/packets/packetHandler.js 
-//src/packets/packetHandler.js
-
 server_1.Start();
