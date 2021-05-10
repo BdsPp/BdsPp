@@ -9,6 +9,7 @@ class PacketHandler extends PluginAPI {
     }
     handle(packet) {
         this.Packet.emit(packet.Data[0], packet);
+        this.Packet.emit("*", packet);
         if (packet.Data[0] == 0x01) {
             events.Unconnect(packet);
             this.fire('UnConnect', packet.Remote);

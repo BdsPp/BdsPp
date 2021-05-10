@@ -26,6 +26,7 @@ class PluginAPI extends EventEmitter {
     fire(...args) {
         let eventName = args.shift();
         this.emit(eventName, ...args);
+        this.emit("*", ...args);
     }
 }
 module.exports = PluginAPI;
