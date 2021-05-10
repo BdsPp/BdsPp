@@ -5,6 +5,7 @@ class PluginAPI extends EventEmitter {
         super();
         this._timers = {};
         this._timercallbacks = {};
+        this.Server = null;
         return this;
     }
     onTimer(Interval, Callback) {

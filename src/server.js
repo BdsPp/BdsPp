@@ -14,6 +14,7 @@ class Server extends EventEmitter {
         var _Handler;
         var _GUID;
         this.Handler = new PacketHandler();
+        this.Handler.Server = this;
         _Handler = this.Handler;
 
         this.PluginPath = PluginPath;
