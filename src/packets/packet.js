@@ -1,5 +1,5 @@
 class Packet {
-    constructor(Data,Server,Remote,GUID) {
+    constructor(Data, Server, Remote, GUID) {
         this.Data = Data;
         this.Length = 0;
         this.ID = 0;
