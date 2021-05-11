@@ -10,10 +10,13 @@ class Packet {
             switch (RaknetID) {
                 case 0x00:
                     this.ID = this.Data[7];
+                    break;
                 case 0x40:
                     this.ID = this.Data[10];
+                    break;
                 case 0x60:
                     this.ID = this.Data[14];
+                    break;
             }
         }
         else {
