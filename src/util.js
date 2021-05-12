@@ -44,6 +44,18 @@
             const buf = Buffer.alloc(0);
             buf.writeUInt8(BigInt(this.MakeGUID()));
             return buf;
+        },
+        MakeIpv4Buffer: function (remote) {//for string
+            var ips = remote.address.split('.').map(str => 0xFF - (parseInt(str, 10)));
+            var portShort = this.NumtoBuf(remote.port, 2);
+            var out = Buffer.from([
+                0x04, ...ips, ...portShort
+            ]);
+            return out;
+        },
+        MakeDataArray: function () {//todo
+            var unknown1 = new Buffer.from([0xf5, 0xff, 0xff, 0xf5]);
+            var unknown2 = new Buffer.from([ 0xff, 0xff, 0xff, 0xff]);
         }
     }
 })();
