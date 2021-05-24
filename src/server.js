@@ -1,9 +1,9 @@
 const dgram = require("dgram");
 const { EventEmitter } = require("events");
 const Log = require("./logger");
-const PacketHandler = require("./packets/packetHandler");
+const PacketHandler = require("./protocol/packetHandler");
 const Util = require("./util");
-const Packet = require("./packets/packet");
+const Packet = require("./protocol/packet");
 const { join } = require('path');
 const { existsSync, readdirSync, lstatSync } = require('fs');
 
