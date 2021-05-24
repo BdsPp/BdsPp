@@ -17,4 +17,4 @@ The language is javascript, which makes it easy to create plug-ins. I'm planning
 
 ## LICENSE
 
-[MIT](LICENSE)
+[Apache-2.0](LICENSE)
